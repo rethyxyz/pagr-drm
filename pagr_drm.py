@@ -8,7 +8,8 @@ import uuid
 
 DEBUG = True
 URL = "http://localhost:3000/pagr_drm.php"
-INVALID_RESPONSES = [400, 403, 404]
+COMPANY_URL = "https://rethy.xyz"
+INVALID_RESPONSES = [400, 404]
 
 def PrepareJson(pairs):
     data = {}
@@ -92,8 +93,10 @@ def Check(drm_key):
             Debug(f"Possible piracy detected. This incident will be reported.")
             sys.exit(1)
 
-        case "{0}":
-            Debug(f"{responseText}: Failed to reach server!")
+        case "{\"error\":\"Invalid DRM key\"}":
+            Name()
+            print(f"Invalid DRM key detected.")
+            print(f"Please purchased this software from {COMPANY_URL}.")
             sys.exit(1)
 
         case _:
