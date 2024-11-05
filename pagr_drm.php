@@ -1,5 +1,5 @@
 <?php
-// drm.php
+// pagr_drm.php
 
 header('Content-Type: application/json');
 
@@ -56,7 +56,7 @@ $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     // Already registered
-    echo json_encode(["message" => "Already registered", "status": "approved"]);
+    echo json_encode(["message" => "Already registered", "status" => "approved"]);
     exit();
 }
 
@@ -68,7 +68,7 @@ $device_count = $row['device_count'];
 
 if ($device_count >= $max_devices) {
     // Too many devices registered
-    echo json_encode(["error" => "Too many devices registered", "status": "denied"]);
+    echo json_encode(["error" => "Too many devices registered", "status" => "denied"]);
     exit();
 }
 
@@ -77,11 +77,11 @@ $sql = "INSERT INTO registrations (drm_key, hardware_id) VALUES ('$drm_key_esc',
 
 if ($conn->query($sql) === TRUE) {
     // Registration successful
-    echo json_encode(["message" => "Registration complete", "status": "approved"]);
+    echo json_encode(["message" => "Registration complete", "status" => "approved"]);
     exit();
 } else {
     // Registration failed
-    echo json_encode(["error" => "Registration failed", "status": "denied"]);
+    echo json_encode(["error" => "Registration failed", "status" => "denied"]);
     exit();
 }
 
