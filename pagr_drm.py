@@ -101,7 +101,7 @@ def Check(drm_key):
         Name()
 
         if error == "Invalid DRM key":
-            print("Invalid DRM key detected. Please purchase this software from {COMPANY_URL}.")
+            print(f"Invalid DRM key detected. Please purchase this software from {COMPANY_URL}.")
             sys.exit(1)
         elif error == "Too many devices registered" and status == "denied":
             print(f"DRM key \"{drm_key}\" is correct, but too many devices were registered.")
