@@ -25,19 +25,23 @@ def Post(data):
     try:
         response = requests.post(url, data=data, headers=headers, timeout=10)
         response.raise_for_status()
+
+        responseText = response.text
+        responseStatusCode = response.status_code
+
     except requests.exceptions.ConnectionError:
         print("ConnectionError")
         print("server might be down")
-        response.text = "{failure}"
-        response.status_code = "0"
+        responseText = "{failure}"
+        responseStatusCode = "0"
     except requests.exceptions.HTTPError:
         print("HTPTError")
         print("server might be down")
-        response.text = "{failure}"
-        response.status_code = "0"
+        responseText = "{failure}"
+        responseStatusCode = "0"
 
-    Debug(f"{response.status_code}: {response.text}")
-    return response.text, response.status_code
+    Debug(f"{responseStatusCode}: {responseText}")
+    return responseText, responseStatusCode
 
 def DRMKeyGenerator():
     return secrets.token_hex(32)
