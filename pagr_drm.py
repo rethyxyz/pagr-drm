@@ -30,6 +30,8 @@ def Post(data):
         Debug(f"ConnectionError: \"{URL}\" is either down, or unreachable to the network.")
         responseText = "{failure}"
         responseStatusCode = "0"
+    except requests.exceptions.HTTPError:
+        pass
 
     responseText = response.text
     responseStatusCode = response.status_code
