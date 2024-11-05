@@ -13,8 +13,7 @@ $dbname = "pagr_drm";
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
-if (!isset($data['drm_key']) || !isset($data['hardware_id']))
-{
+if (!isset($data['drm_key']) || !isset($data['hardware_id'])) {
     http_response_code(400);
     echo json_encode(["error" => "Invalid request"]);
     exit();
@@ -27,8 +26,7 @@ $hardware_id = $data['hardware_id'];
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
-if ($conn->connect_error)
-{
+if ($conn->connect_error) {
     http_response_code(500);
     echo json_encode(["error" => "Database connection failed"]);
     exit();
@@ -58,7 +56,7 @@ $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     // Already registered
-    echo "{1}";
+    echo json_encode(["message" => "Already registered", "status": "approved"]);
     exit();
 }
 
@@ -70,7 +68,7 @@ $device_count = $row['device_count'];
 
 if ($device_count >= $max_devices) {
     // Too many devices registered
-    echo "{2}";
+    echo json_encode(["error" => "Too many devices registered", "status": "denied"]);
     exit();
 }
 
@@ -79,11 +77,11 @@ $sql = "INSERT INTO registrations (drm_key, hardware_id) VALUES ('$drm_key_esc',
 
 if ($conn->query($sql) === TRUE) {
     // Registration successful
-    echo "{10}";
+    echo json_encode(["message" => "Registration complete", "status": "approved"]);
     exit();
 } else {
     // Registration failed
-    echo "{11}";
+    echo json_encode(["error" => "Registration failed", "status": "denied"]);
     exit();
 }
 
