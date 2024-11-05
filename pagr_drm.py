@@ -87,29 +87,29 @@ def Check(drm_key):
         status = response_json.get('status', '')
 
         if message == "Already registered" and status == "approved":
-            Debug(f"{message}: Correct key \"{drm_key}\", already registered \"{hardwareID}\". Approved.")
             return
         elif message == "Registration complete" and status == "approved":
-            Debug(f"{message}: Correct key \"{drm_key}\", registration complete \"{hardwareID}\". Approved.")
             return
         else:
+            Name()
             print(f"Unknown success response: {response_json}")
             sys.exit(1)
     elif 'error' in response_json:
         error = response_json['error']
         status = response_json.get('status', '')
 
+        Name()
+
         if error == "Invalid DRM key":
-            Name()
-            print("Invalid DRM key detected.")
-            print(f"Please purchase this software from {COMPANY_URL}.")
+            print("Invalid DRM key detected. Please purchase this software from {COMPANY_URL}.")
             sys.exit(1)
         elif error == "Too many devices registered" and status == "denied":
-            Debug(f"{error}: Correct key \"{drm_key}\", too many device registrations \"{hardwareID}\". Denied!")
-            Debug("Possible piracy detected. This incident will be reported.")
+            print(f"DRM key \"{drm_key}\" is correct, but too many devices were registered.")
+            print(f"Please buy the software at {COMPANY_URL}.")
             sys.exit(1)
         elif error == "Registration failed" and status == "denied":
-            Debug(f"{error}: Correct key \"{drm_key}\", registration failed \"{hardwareID}\". Denied.")
+            print(f"DRM key \"{drm_key}\" is correct, but registration failed.")
+            print(f"Please try again later. If this issue persists, visit the contact page at {COMPANY_URL}.")
             sys.exit(1)
         else:
             print(f"Unknown error response: {response_json}")
@@ -119,8 +119,8 @@ def Check(drm_key):
         sys.exit(1)
 
 def Debug(message):
-    if DEBUG:
-        print(f"[DEBUG] {message}")
+    if DEBUG: print(f"[DEBUG] {message}")
 
 def Name():
-    print("pagr_drm: Protect your software.")
+    print("*-.-*-.-*PAGR_DRM*-.-*-.-*")
+    print("*-*Protect your software*-*")
