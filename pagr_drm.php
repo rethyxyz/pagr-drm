@@ -32,58 +32,68 @@ if ($conn->connect_error) {
     exit();
 }
 
-// Escape input data to prevent SQL injection
-$drm_key_esc = $conn->real_escape_string($drm_key);
-$hardware_id_esc = $conn->real_escape_string($hardware_id);
-
 // Validate drm_key
-$sql = "SELECT max_devices FROM drm_keys WHERE drm_key = '$drm_key_esc'";
-$result = $conn->query($sql);
+$stmt = $conn->prepare("SELECT max_devices FROM drm_keys WHERE drm_key = ?");
+$stmt->bind_param("s", $drm_key);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result->num_rows == 0) {
     // Invalid DRM key
     http_response_code(403);
     echo json_encode(["error" => "Invalid DRM key"]);
+    $stmt->close();
+    $conn->close();
     exit();
 }
 
 $row = $result->fetch_assoc();
 $max_devices = $row['max_devices'];
+$stmt->close();
 
 // Check if hardware_id is already registered
-$sql = "SELECT * FROM registrations WHERE drm_key = '$drm_key_esc' AND hardware_id = '$hardware_id_esc'";
-$result = $conn->query($sql);
+$stmt = $conn->prepare("SELECT * FROM registrations WHERE drm_key = ? AND hardware_id = ?");
+$stmt->bind_param("ss", $drm_key, $hardware_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     // Already registered
     echo json_encode(["message" => "Already registered", "status" => "approved"]);
+    $stmt->close();
+    $conn->close();
     exit();
 }
+$stmt->close();
 
 // Check if the maximum number of devices has been reached
-$sql = "SELECT COUNT(*) as device_count FROM registrations WHERE drm_key = '$drm_key_esc'";
-$result = $conn->query($sql);
+$stmt = $conn->prepare("SELECT COUNT(*) as device_count FROM registrations WHERE drm_key = ?");
+$stmt->bind_param("s", $drm_key);
+$stmt->execute();
+$result = $stmt->get_result();
 $row = $result->fetch_assoc();
 $device_count = $row['device_count'];
+$stmt->close();
 
 if ($device_count >= $max_devices) {
     // Too many devices registered
     echo json_encode(["error" => "Too many devices registered", "status" => "denied"]);
+    $conn->close();
     exit();
 }
 
 // Register the new hardware_id
-$sql = "INSERT INTO registrations (drm_key, hardware_id) VALUES ('$drm_key_esc', '$hardware_id_esc')";
+$stmt = $conn->prepare("INSERT INTO registrations (drm_key, hardware_id) VALUES (?, ?)");
+$stmt->bind_param("ss", $drm_key, $hardware_id);
 
-if ($conn->query($sql) === TRUE) {
+if ($stmt->execute()) {
     // Registration successful
     echo json_encode(["message" => "Registration complete", "status" => "approved"]);
-    exit();
 } else {
     // Registration failed
     echo json_encode(["error" => "Registration failed", "status" => "denied"]);
-    exit();
 }
-
+$stmt->close();
 $conn->close();
+exit();
 ?>
