@@ -54,7 +54,8 @@ def HardwareID():
 def VerifyResponse(responseStatusCode):
     if responseStatusCode in INVALID_RESPONSES:
         Name()
-        print("[Failure] Either the DRM server is down, or the client Internet gateway is unreachable.")
+        print("The DRM server is unreachable.")
+        print("Please ensure your network connection is online and try again.")
         sys.exit(1)
 
 def Check(drm_key):
