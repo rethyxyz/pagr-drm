@@ -22,11 +22,10 @@ def Post(data):
     headers = {'Content-Type': 'application/json'}
     url = URL
 
-    try:
-        response = requests.post(url, data=data, headers=headers, timeout=10)
-        response.raise_for_status()
-    except:
-        pass
+    # TODO: Error checking here.
+    response = requests.post(url, data=data, headers=headers, timeout=10)
+    response.raise_for_status()
+
     Debug(f"{response.status_code}: {response.text}")
     return response.text, response.status_code
 
