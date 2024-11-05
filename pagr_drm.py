@@ -5,7 +5,7 @@ import sys
 import hashlib
 import uuid
 
-DEBUG = True
+DEBUG = False
 URL = "http://localhost:3000/pagr_drm.php"
 COMPANY_URL = "https://rethy.xyz/Software/pagr_drm"
 INVALID_RESPONSES = [400, 404]
