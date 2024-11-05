@@ -6,7 +6,7 @@ import sys
 import hashlib
 import uuid
 
-DEBUG = True
+DEBUG = False
 URL = "http://localhost:3000/pagr_drm.php"
 INVALID_RESPONSES = [400, 403, 404]
 
