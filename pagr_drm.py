@@ -22,9 +22,19 @@ def Post(data):
     headers = {'Content-Type': 'application/json'}
     url = URL
 
-    # TODO: Error checking here.
-    response = requests.post(url, data=data, headers=headers, timeout=10)
-    response.raise_for_status()
+    try:
+        response = requests.post(url, data=data, headers=headers, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.ConnectionError:
+        print("ConnectionError")
+        print("server might be down")
+        response.text = "{failure}"
+        response.status_code = "0"
+    except requests.exceptions.HTTPError:
+        print("HTPTError")
+        print("server might be down")
+        response.text = "{failure}"
+        response.status_code = "0"
 
     Debug(f"{response.status_code}: {response.text}")
     return response.text, response.status_code
@@ -81,6 +91,11 @@ def Check(drm_key):
             Debug(f"{responseText}: Correct key \"{drm_key}\", too many device registrations \"{hardwareID}\". Denied!")
             Debug(f"Possible piracy detected. This incident will be reported.")
             sys.exit(1)
+
+        case "{0}":
+            Debug(f"{responseText}: Failed to reach server!")
+            sys.exit(1)
+
         case _:
             print(f"Unknown case detected (multiline):\n\t{responseText}")
             sys.exit(1)
