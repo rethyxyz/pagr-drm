@@ -22,17 +22,17 @@ def Post(data):
     headers = {'Content-Type': 'application/json'}
     url = URL
 
+    response = requests.post(url, data=data, headers=headers, timeout=10)
+
     try:
-        response = requests.post(url, data=data, headers=headers, timeout=10)
         response.raise_for_status()
-
-        responseText = response.text
-        responseStatusCode = response.status_code
-
     except requests.exceptions.ConnectionError:
         Debug(f"ConnectionError: \"{URL}\" is either down, or unreachable to the network.")
         responseText = "{failure}"
         responseStatusCode = "0"
+
+    responseText = response.text
+    responseStatusCode = response.status_code
 
     Debug(f"{responseStatusCode}: {responseText}")
     return responseText, responseStatusCode
