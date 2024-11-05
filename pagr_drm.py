@@ -30,13 +30,7 @@ def Post(data):
         responseStatusCode = response.status_code
 
     except requests.exceptions.ConnectionError:
-        print("ConnectionError")
-        print("server might be down")
-        responseText = "{failure}"
-        responseStatusCode = "0"
-    except requests.exceptions.HTTPError:
-        print("HTPTError")
-        print("server might be down")
+        Debug(f"ConnectionError: \"{URL}\" is either down, or unreachable to the network.")
         responseText = "{failure}"
         responseStatusCode = "0"
 
