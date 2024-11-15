@@ -5,8 +5,8 @@ header('Content-Type: application/json');
 
 // Database credentials
 $servername = "localhost";
-$username = "eO3EPtUBC0j896YExiVp"; // Replace with your DB username
-$password = "uON2dlBF9sHWrnap4OjH@"; // Replace with your DB password
+$username = "username"; // Replace with your DB username
+$password = "password"; // Replace with your DB password
 $dbname = "pagr_drm";
 
 // Get the POST data
