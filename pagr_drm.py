@@ -7,7 +7,7 @@ import uuid
 
 DEBUG = False
 URL = "http://localhost:3000/pagr_drm.php"
-COMPANY_URL = "https://rethy.xyz/Software/pagr_drm"
+COMPANY_URL = "https://rethy.xyz/"
 INVALID_RESPONSES = [400, 404]
 
 def PrepareJson(pairs):
@@ -44,7 +44,11 @@ def DRMKeyGenerator():
 def HardwareID():
     mac = uuid.getnode()
     if (mac >> 40) % 2:
-        raise ValueError("MAC address is not available or cannot be used.")
+        Name()
+        print("MAC address is not available or cannot be used.")
+        print("This software may be incompatible with your system.")
+        print(f"Access the contact page on {COMPANY_URL} for more information.")
+
     mac_str = ':'.join(['{:02x}'.format((mac >> ele) & 0xff)
                         for ele in range(0, 8 * 6, 8)][::-1])
     hardware_id = hashlib.sha256(mac_str.encode()).hexdigest()
